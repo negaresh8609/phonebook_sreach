@@ -1,50 +1,34 @@
-import 'package:excel/excel.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:file_saver/file_saver.dart';
+import 'dart:typed_data';
 
 class SampleFilesPage extends StatelessWidget {
   const SampleFilesPage({super.key});
 
-  // متد اصلی برای ساخت و ذخیره فایل اکسل
-  Future<void> _generateAndSaveSample(
-      BuildContext context, String fileName, List<String> headers) async {
+  Future<void> _loadAndSaveSample(
+      BuildContext context, String assetPath, String outputFileName) async {
     try {
-      // ۱. یک فایل اکسل جدید ایجاد کن
-      var excel = Excel.createExcel();
-      Sheet sheetObject = excel['Sheet1'];
+      final ByteData data = await rootBundle.load(assetPath);
+      final Uint8List bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-      // ۲. هدرها (عنوان ستون‌ها) را در ردیف اول قرار بده
-      sheetObject.appendRow(headers.map((header) => TextCellValue(header)).toList());
-      
-      // تنظیمات ظاهری برای هدر
-      for(int i = 0; i < headers.length; i++) {
-        var cell = sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
-        cell.cellStyle = CellStyle(
-          bold: true,
-          backgroundColorHex: '#FFC0C0C0' // خاکستری روشن
-        );
-      }
+      // این بخش که خطا می‌داد، با این مقادیر صحیح است
+      await FileSaver.instance.saveFile(
+        name: outputFileName,
+        bytes: bytes,
+        ext: 'xlsx',
+        mimeType: MimeType.OPEN_XML_SPREADSHEET, // این مقدار صحیح است
+      );
 
-      // ۳. فایل را به بایت تبدیل کن
-      var fileBytes = excel.save();
-
-      // ۴. با استفاده از file_saver فایل را به کاربر برای ذخیره ارائه بده
-      if (fileBytes != null) {
-        MimeType type = MimeType.MICROSOFT_EXCEL;
-        await FileSaver.instance.saveFile(
-          name: fileName,
-          bytes: fileBytes,
-          ext: 'xlsx',
-          mimeType: type,
-        );
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فایل "$fileName.xlsx" آماده ذخیره‌سازی است.')),
-        );
-      }
-    } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('خطا در ایجاد فایل: $e')),
+        SnackBar(content: Text('فایل "$outputFileName.xlsx" آماده ذخیره‌سازی است.')),
+      );
+
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('خطا در بارگذاری فایل نمونه: $e')),
       );
     }
   }
@@ -64,42 +48,37 @@ class SampleFilesPage extends StatelessWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.person_outline, color: Colors.blue),
-                title: const Text('نمونه اکسل شماره تماس‌ها', style: TextStyle(fontSize: 16)),
-                subtitle: const Text('فایلی با ستون‌های مورد نیاز بخش پرسنل.'),
+                title: const Text('دانلود نمونه اکسل پرسنل'),
                 onTap: () {
-                  final headers = [
-                    'کد پرسنلی', 'نام و نام خانوادگی', 'نام پدر', 
-                    'کد ملی', 'شماره شناسنامه', 'موبایل'
-                  ];
-                  _generateAndSaveSample(context, 'sample_personnel', headers);
+                  _loadAndSaveSample(
+                    context,
+                    'assets/samples/phone.xlsx',
+                    'sample_personnel',
+                  );
                 },
               ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.school_outlined, color: Colors.green),
-                title: const Text('نمونه اکسل مدارس', style: TextStyle(fontSize: 16)),
-                subtitle: const Text('فایلی با ستون‌های مورد نیاز بخش مدارس.'),
+                title: const Text('دانلود نمونه اکسل مدارس'),
                 onTap: () {
-                  final headers = [
-                    'کد مدرسه', 'نام مدرسه', 'نوع اداره', 'محل مدرسه', 'جنسیت', 
-                    'مقطع', 'شیفت', 'وضعیت استقلال', 'کد واحد اصلی', 
-                    'نام واحد اصلی', 'نام شهر یا روستا', 'تعداد کلاس', 'تعداد دانش آموز'
-                  ];
-                   _generateAndSaveSample(context, 'sample_schools', headers);
+                  _loadAndSaveSample(
+                    context,
+                    'assets/samples/school.xlsx',
+                    'sample_schools',
+                  );
                 },
               ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.article_outlined, color: Colors.orange),
-                title: const Text('نمونه اکسل ابلاغ‌های پرسنل', style: TextStyle(fontSize: 16)),
-                subtitle: const Text('فایلی با ستون‌های مورد نیاز بخش ابلاغ‌ها.'),
+                title: const Text('دانلود نمونه اکسل ابلاغ‌ها'),
                 onTap: () {
-                  final headers = [
-                    'کد پرسنلي', 'نام', 'جنسيت', 'کد واحد سازماني', 'نام واحد سازماني', 
-                    'نوع تدريس', 'مقطع', 'گروه تدريس', 'نوع واحد سازماني', 'ساعت', 
-                    'از تاريخ', 'تا تاريخ', 'رشته تدريس', 'پست'
-                  ];
-                  _generateAndSaveSample(context, 'sample_orders', headers);
+                  _loadAndSaveSample(
+                    context,
+                    'assets/samples/order.xlsx',
+                    'sample_orders',
+                  );
                 },
               ),
             ],
