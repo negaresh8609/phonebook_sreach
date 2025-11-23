@@ -1,55 +1,47 @@
-# نام این گردش کار که در تب Actions گیت‌هاب نمایش داده می‌شود
-name: Build Flutter Android APK
+name: Build Flutter App
 
-# این بخش مشخص می‌کند که چه زمانی این گردش کار اجرا شود
 on:
-  # این گردش کار را می‌توان به صورت دستی از تب Actions اجرا کرد
-  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-# تعریف وظایفی که باید انجام شوند
 jobs:
   build:
-    # مشخص کردن سیستم‌عامل ماشین مجازی (آخرین نسخه اوبونتو)
     runs-on: ubuntu-latest
 
-    # مراحل اجرای وظیفه
     steps:
-      # مرحله 1: دانلود (Checkout) کد شما از مخزن
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # مرحله ۱: دریافت کد از ریپازیتوری
+      - uses: actions/checkout@v4
 
-      # مرحله 2: نصب و راه‌اندازی Java (مورد نیاز برای اندروید)
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
+      # مرحله ۲: نصب فلاتر
+      - uses: subosito/flutter-action@v2
         with:
-          distribution: 'temurin'
-          java-version: '11'
-
-      # مرحله 3: نصب و راه‌اندازی فلاتر
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          # می‌توانید نسخه فلاتر را مشخص کنید یا 'stable' را برای آخرین نسخه پایدار قرار دهید
-          flutter-version: '3.22.2'
           channel: 'stable'
-          cache: true # کش کردن برای افزایش سرعت بیلدهای بعدی
 
-      # مرحله 4: نصب پکیج‌های پروژه
-      - name: Install dependencies
-        run: flutter pub get
+      # مرحله ۳: نصب پکیج‌ها
+      - run: flutter pub get
 
-      # مرحله 5: ساخت فایل APK (نسخه Debug برای تست)
-      # برای نسخه نهایی (Release)، باید Keystore و امضای دیجیتال را پیکربندی کنید که پیچیده‌تر است.
-      # برای شروع، بیلد Debug کافی و عالی است.
-      - name: Build APK
-        run: flutter build apk --debug
+      # مرحله ۴: اجرای دستور ساخت آیکون‌ها
+      - run: flutter pub run flutter_launcher_icons:main
 
-      # مرحله 6: آپلود فایل APK ساخته شده به عنوان "آرتیفکت"
-      # این کار باعث می‌شود فایل APK قابل دانلود باشد.
-      - name: Upload APK artifact
+      # --- مراحل جدید برای ساخت Release APK ---
+
+      # مرحله ۵: ایجاد فایل key.properties از Secret
+      - name: Create key.properties
+        run: echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
+
+      # مرحله ۶: ایجاد فایل keystore از Secret (Base64)
+      - name: Create upload-keystore.jks
+        run: echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+
+      # مرحله ۷: ساخت فایل APK نهایی
+      - name: Build Release APK
+        run: flutter build apk --release --split-per-abi
+
+      # مرحله ۸: آپلود فایل‌های APK به عنوان Artifact
+      - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          # نامی که برای فایل‌های آپلود شده نمایش داده می‌شود
-          name: debug-apk
-          # مسیری که فایل APK در آن ساخته شده است
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: release-apks
+          path: build/app/outputs/flutter-apk/
