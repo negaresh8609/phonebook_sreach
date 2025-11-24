@@ -1,23 +1,29 @@
+// phonebook_sreach/android/build.gradle
+
 buildscript {
-    
     ext.kotlin_version = '1.9.23' 
     repositories {
-        
         google()
         mavenCentral()
+        
+        // *** این خط، کلید حل نهایی مشکل است ***
+        // ما باید مخزن فلاتر را اینجا هم تعریف می‌کردیم تا پلاگین dev.flutter.flutter-gradle-plugin پیدا شود.
+        maven {
+            url 'https://storage.googleapis.com/download.flutter.io'
+        }
     }
 
     dependencies {
-        
+        // این خط، نسخه پلاگین 'com.android.application' را برای کل پروژه تعریف می‌کند
         classpath 'com.android.tools.build:gradle:8.2.2'
-       
+        // این خط، نسخه پلاگین 'kotlin-android' را تعریف می‌کند
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
-
+// این بلوک باید خالی بماند تا با 'settings.gradle' تداخل نداشته باشد
 allprojects {
-    
+    // repositories { ... }  <-- این بخش عمداً خالی است
 }
 
 rootProject.buildDir = '../build'
