@@ -17,7 +17,7 @@ class SampleFilesPage extends StatelessWidget {
         name: outputFileName,
         bytes: bytes,
         ext: 'xlsx',
-        mimeType: MimeType.OPEN_XML_SPREADSHEET, // این مقدار صحیح است
+        mimeType: MimeType.microsoftExcel, // این مقدار صحیح است
       );
 
       if (!context.mounted) return;
