@@ -1,28 +1,28 @@
 plugins {
     id "com.android.application"
+    // پلاگین کاتلین را نگه می‌داریم چون ممکن است پلاگین‌های دیگر فلاتر به آن نیاز داشته باشند
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file("local.properties")
+def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader("UTF-8") { reader ->
+    localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
 }
 
-def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = "1"
+    flutterVersionCode = '1'
 }
 
-def flutterVersionName = localProperties.getProperty("flutter.versionName")
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = "1.0"
+    flutterVersionName = '1.0'
 }
 
-// بارگذاری فایل کلید
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -30,43 +30,38 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.phonebook_sreach"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    namespace "com.example.phonebook_sreach"
+    compileSdk flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+    
+    // بخش kotlinOptions حذف شد چون فایل اصلی را به جاوا تبدیل کردیم
+
     signingConfigs {
         release {
-            // اصلاح خطای path is null: ابتدا چک میکنیم مقدار storeFile وجود داشته باشد
             if (keystorePropertiesFile.exists() && keystoreProperties['storeFile']) {
                 storeFile file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
-            } else {
-                // اگر فایل کلید ناقص بود، برای جلوگیری از توقف بیلد، از کلید دیباگ استفاده کن یا چاپ کن
-                println "Warning: key.properties found but 'storeFile' is missing. Release build will not be signed properly."
             }
         }
     }
 
     defaultConfig {
-        applicationId = "com.example.phonebook_sreach"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        applicationId "com.example.phonebook_sreach"
+        minSdk flutter.minSdkVersion
+        targetSdk flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
     }
 
     buildTypes {
         release {
-            // اگر کانفیگ ریلیز به درستی لود شده بود اعمال شود، در غیر این صورت نادیده گرفته شود
             if (keystorePropertiesFile.exists() && keystoreProperties['storeFile']) {
                 signingConfig signingConfigs.release
             } else {
@@ -79,9 +74,5 @@ android {
 }
 
 flutter {
-    source = "../.."
-}
-dependencies {
-    // اضافه کردن صریح کتابخانه استاندارد کاتلین برای رفع مشکل کامپایل
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
+    source '../..'
 }
