@@ -81,3 +81,7 @@ android {
 flutter {
     source = "../.."
 }
+dependencies {
+    // اضافه کردن صریح کتابخانه استاندارد کاتلین برای رفع مشکل کامپایل
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
+}
