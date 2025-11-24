@@ -1,19 +1,31 @@
-    // کد جدید - این را جایگزین کنید
 pluginManagement {
     repositories {
+        // مخازن استاندارد برای پلاگین‌ها
         google()
         mavenCentral()
         gradlePluginPortal()
+        
+        // *** خط کلیدی و گمشده اینجاست ***
+        // این مخزن برای پیدا کردن dev.flutter.flutter-gradle-plugin ضروری است
+        maven {
+            url 'https://storage.googleapis.com/download.flutter.io'
+        }
     }
 }
-    
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // مخازن برای کتابخانه‌ها و وابستگی‌ها
         google()
         mavenCentral()
+        
+        // مخزن فلاتر را اینجا هم اضافه می‌کنیم، هرچند برای پلاگین حیاتی‌تر است
+        maven {
+            url 'https://storage.googleapis.com/download.flutter.io'
+        }
     }
 }
-    
-rootProject.name = 'android'
+
+rootProject.name = "android"
 include ':app'
