@@ -1,4 +1,6 @@
-name: Build Flutter App
+# نام فایل: .github/workflows/main.yml
+
+name: Build and Release Flutter App
 
 on:
   push:
@@ -12,34 +14,55 @@ jobs:
 
     steps:
       # مرحله ۱: دریافت کد از ریپازیتوری
-      - uses: actions/checkout@v4
+      - name: Checkout repository code
+        uses: actions/checkout@v4
 
-      # مرحله ۲: نصب فلاتر
-      - uses: subosito/flutter-action@v2
+      # مرحله ۲: نصب Java Development Kit (JDK)
+      # این مرحله برای اطمینان از سازگاری Gradle حیاتی است
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # یک توزیع محبوب و استاندارد از جاوا
+          java-version: '17'
+
+      # مرحله ۳: نصب SDK فلاتر
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      # مرحله ۳: نصب پکیج‌ها
-      - run: flutter pub get
+      # مرحله ۴: نصب وابستگی‌های Dart
+      - name: Install Dart dependencies
+        run: flutter pub get
 
-      # مرحله ۴: اجرای دستور ساخت آیکون‌ها
-      - run: flutter pub run flutter_launcher_icons:main
+      # مرحله ۵: اجرای کد جنریتور (ساخت آیکون‌ها)
+      - name: Generate launcher icons
+        run: flutter pub run flutter_launcher_icons:main
 
-      # --- مراحل جدید برای ساخت Release APK ---
-
-      # مرحله ۵: ایجاد فایل key.properties از Secret
-      - name: Create key.properties
+      # مرحله ۶: ایجاد فایل key.properties از Secrets گیت‌هاب
+      - name: Create key.properties for signing
         run: echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
 
-      # مرحله ۶: ایجاد فایل keystore از Secret (Base64)
-      - name: Create upload-keystore.jks
+      # مرحله ۷: ایجاد فایل keystore از Secrets گیت‌هاب (دیکد کردن از Base64)
+      - name: Create upload-keystore.jks from secrets
         run: echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
 
-      # مرحله ۷: ساخت فایل APK نهایی
+      # ====================================================================
+      # !!! مرحله کلیدی جدید برای حل مشکل !!!
+      # مرحله ۸: پاک‌سازی اجباری کش Gradle
+      # این کار تضمین می‌کند که Gradle از پیکربندی جدید استفاده کرده و کش قدیمی باعث خطا نشود.
+      - name: Force Clean Gradle Cache
+        run: |
+          rm -rf $HOME/.gradle/caches/
+          rm -rf $HOME/.gradle/wrapper/
+          echo "Gradle cache cleaned successfully."
+      # ====================================================================
+
+      # مرحله ۹: ساخت APK نهایی برای Release
       - name: Build Release APK
         run: flutter build apk --release --split-per-abi
 
-      # مرحله ۸: آپلود فایل‌های APK به عنوان Artifact
+      # مرحله ۱۰: آپلود فایل‌های APK ساخته شده به عنوان Artifact
       - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
