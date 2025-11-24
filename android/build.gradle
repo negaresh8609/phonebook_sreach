@@ -1,5 +1,23 @@
+buildscript {
+    
+    ext.kotlin_version = '1.9.23' 
+    repositories {
+        
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        
+        classpath 'com.android.tools.build:gradle:8.2.2'
+       
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+
 allprojects {
-    // این بلوک باید خالی بماند تا از تعریف مخازن در سطح پروژه جلوگیری شود.
+    
 }
 
 rootProject.buildDir = '../build'
