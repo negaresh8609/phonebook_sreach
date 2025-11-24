@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.EduData_Center"
+    namespace = "com.example.phonebook_sreach"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
