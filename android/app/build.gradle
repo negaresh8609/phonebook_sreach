@@ -1,14 +1,17 @@
+plugins {
+    id "com.android.application"
+    // این خط اتصال به فلاتر را در روش جدید برقرار می‌کند
+    id "dev.flutter.flutter-gradle-plugin"
+    // پلاگین کاتلین را نگه می‌داریم چون بسیاری از کتابخانه‌ها به آن نیاز دارند
+    id "org.jetbrains.kotlin.android"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -21,10 +24,6 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-// استفاده از روش کلاسیک و بسیار پایدار برای اعمال فلاتر
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
 android {
     namespace "com.example.phonebook_sreach"
     compileSdk flutter.compileSdkVersion
@@ -33,6 +32,14 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
@@ -71,8 +78,9 @@ flutter {
 }
 
 dependencies {
-    // وابستگی‌های حیاتی برای رفع خطاهای Cannot find symbol
+    // *** بخش بسیار مهم ***
+    // این وابستگی‌ها خطاهای Cannot find symbol در فایل‌های جاوا را رفع می‌کنند
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.annotation:annotation:1.7.0'
-    implementation 'io.flutter:flutter_embedding_debug:1.0.0-e85ea0e79c6d894c120cda4ee8ee10fe6745e187' // نسخه موقت برای شناسایی کلاس‌ها
+    implementation 'androidx.annotation:annotation:1.8.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
 }
