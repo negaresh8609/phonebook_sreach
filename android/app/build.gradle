@@ -1,7 +1,7 @@
 plugins {
     id "com.android.application"
-    id "dev.flutter.flutter-gradle-plugin" 
-    id "org.jetbrains.kotlin.android" 
+    id "dev.flutter.flutter-gradle-plugin"
+    id "org.jetbrains.kotlin.android"
 }
 
 def localProperties = new Properties()
@@ -24,11 +24,10 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.phonebook_sreach"
-    compileSdk 34 // استفاده از SDK جدیدتر برای سازگاری با AGP 8
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        // *** تغییر حیاتی: AGP 8 نیاز به جاوا ۱۷ دارد ***
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -50,11 +49,22 @@ android {
             def keystoreProperties = new Properties()
             def keystorePropertiesFile = rootProject.file('key.properties')
             if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-                storeFile file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
+                try {
+                    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+                } catch (Exception e) {
+                    println("Could not load key.properties")
+                }
+                
+                // *** اصلاح مهم: بررسی وجود مسیر قبل از استفاده ***
+                def keyPath = keystoreProperties['storeFile']
+                if (keyPath) {
+                    storeFile file(keyPath)
+                    storePassword keystoreProperties['storePassword']
+                    keyAlias keystoreProperties['keyAlias']
+                    keyPassword keystoreProperties['keyPassword']
+                } else {
+                    println("Warning: 'storeFile' path is missing in key.properties. Build will proceed without signing configuration.")
+                }
             }
         }
     }
@@ -73,7 +83,6 @@ flutter {
 }
 
 dependencies {
-    
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.annotation:annotation:1.8.0'
     implementation 'androidx.core:core-ktx:1.10.1'
