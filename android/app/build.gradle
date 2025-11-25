@@ -1,16 +1,14 @@
-plugins {
-    id "com.android.application"
-    // پلاگین کاتلین را نگه می‌داریم تا تداخلی ایجاد نشود، هرچند از جاوا استفاده می‌کنیم
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
-}
-
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -23,11 +21,9 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+apply plugin: 'com.android.application'
+// استفاده از روش کلاسیک و بسیار پایدار برای اعمال فلاتر
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.example.phonebook_sreach"
@@ -35,19 +31,8 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    signingConfigs {
-        release {
-            if (keystorePropertiesFile.exists() && keystoreProperties['storeFile']) {
-                storeFile file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-            }
-        }
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -58,13 +43,23 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            def keystoreProperties = new Properties()
+            def keystorePropertiesFile = rootProject.file('key.properties')
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            if (keystorePropertiesFile.exists() && keystoreProperties['storeFile']) {
-                signingConfig signingConfigs.release
-            } else {
-                signingConfig signingConfigs.debug
-            }
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }
@@ -75,12 +70,9 @@ flutter {
     source '../..'
 }
 
-// *** بخش حیاتی اضافه شده ***
 dependencies {
-    // این خطوط مشکل "cannot find symbol class Keep/NonNull" را حل می‌کنند
+    // وابستگی‌های حیاتی برای رفع خطاهای Cannot find symbol
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.annotation:annotation:1.7.0'
-    
-    // این خطوط تضمین می‌کنند پلاگین‌های فلاتر به درستی لود شوند
-    implementation platform('androidx.compose:compose-bom:2023.08.00')
+    implementation 'io.flutter:flutter_embedding_debug:1.0.0-e85ea0e79c6d894c120cda4ee8ee10fe6745e187' // نسخه موقت برای شناسایی کلاس‌ها
 }
