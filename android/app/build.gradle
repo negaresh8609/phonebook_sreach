@@ -1,9 +1,7 @@
 plugins {
     id "com.android.application"
-    // این خط اتصال به فلاتر را در روش جدید برقرار می‌کند
-    id "dev.flutter.flutter-gradle-plugin"
-    // پلاگین کاتلین را نگه می‌داریم چون بسیاری از کتابخانه‌ها به آن نیاز دارند
-    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin" 
+    id "org.jetbrains.kotlin.android" 
 }
 
 def localProperties = new Properties()
@@ -26,20 +24,17 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.phonebook_sreach"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 34 // استفاده از SDK جدیدتر برای سازگاری با AGP 8
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        // *** تغییر حیاتی: AGP 8 نیاز به جاوا ۱۷ دارد ***
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        jvmTarget = '17'
     }
 
     defaultConfig {
@@ -78,8 +73,7 @@ flutter {
 }
 
 dependencies {
-    // *** بخش بسیار مهم ***
-    // این وابستگی‌ها خطاهای Cannot find symbol در فایل‌های جاوا را رفع می‌کنند
+    
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.annotation:annotation:1.8.0'
     implementation 'androidx.core:core-ktx:1.10.1'

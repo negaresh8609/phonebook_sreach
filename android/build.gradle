@@ -1,16 +1,3 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        // اطمینان از نسخه مناسب پلاگین اندروید
-        classpath 'com.android.tools.build:gradle:8.1.0' 
-        // اگر از کاتلین استفاده نمی‌کنید، نیازی به خط زیر نیست اما بودنش ضرری ندارد
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
-    }
-}
-
 allprojects {
     repositories {
         google()

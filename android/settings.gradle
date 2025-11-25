@@ -17,7 +17,14 @@ pluginManagement {
 }
 
 plugins {
+    // نسخه پلاگین فلاتر
     id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
+    
+    // نسخه پلاگین اندروید (AGP) - نسخه 8.2.1 بسیار پایدار است
+    id "com.android.application" version "8.2.1" apply false
+    
+    // نسخه کاتلین
+    id "org.jetbrains.kotlin.android" version "1.9.20" apply false
 }
 
 include ":app"
