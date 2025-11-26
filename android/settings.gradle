@@ -17,14 +17,24 @@ pluginManagement {
 }
 
 plugins {
-    // نسخه پلاگین فلاتر
     id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
-    
-    // نسخه پلاگین اندروید (AGP) - نسخه 8.2.1 بسیار پایدار است
     id "com.android.application" version "8.2.1" apply false
-    
-    // نسخه کاتلین
     id "org.jetbrains.kotlin.android" version "1.9.20" apply false
 }
 
 include ":app"
+
+// *** بخش حیاتی که قبلاً حذف شده بود ***
+// این کد پلاگین‌های فلاتر را پیدا کرده و به پروژه اضافه می‌کند
+def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
+def properties = new Properties()
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
+}
+
+def flutterSdkPath = properties.getProperty("flutter.sdk")
+if (flutterSdkPath != null) {
+    apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+} else {
+    println "Warning: flutter.sdk not found in local.properties. Plugins will not be loaded."
+}

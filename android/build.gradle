@@ -1,3 +1,15 @@
+import groovy.util.XmlParser
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+       
+        classpath "com.android.tools.build:gradle:8.6.0"
+    }
+}
 allprojects {
     repositories {
         google()
@@ -15,4 +27,26 @@ subprojects {
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
+}
+
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            project.android {
+                if (namespace == null) {
+                    def manifestFile = file('src/main/AndroidManifest.xml')
+                    if (manifestFile.exists()) {
+                        def parser = new XmlParser()
+                        def rootNode = parser.parse(manifestFile)
+                        def packageName = rootNode.attribute("package")
+                        if (packageName != null) {
+                            println "Injecting namespace '$packageName' into project '${project.name}'"
+                            namespace = packageName
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
