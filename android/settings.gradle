@@ -1,14 +1,13 @@
 pluginManagement {
-    def flutterSdkPath = {
-        def properties = new Properties()
-        file("local.properties").withInputStream { properties.load(it) }
-        def flutterSdkPath = properties.getProperty("flutter.sdk")
-        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
-        return flutterSdkPath
-    }()
-
+    // ۱. بارگذاری Flutter Gradle Plugin از داخل SDK
+    def flutterSdkPath = new Properties().withInputStream(file("local.properties").newInputStream()) { props ->
+        props.load(it)
+        return props.getProperty("flutter.sdk")
+    }
+    // این دستور باعث می‌شود تا pluginManagement از سورس لوکال Flutter استفاده کند
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
+    // ۲. مخازن لازم برای یافتن پلاگین‌ها
     repositories {
         google()
         mavenCentral()
@@ -16,25 +15,12 @@ pluginManagement {
     }
 }
 
+// ۳. تعریف نسخه‌های پلاگین‌ها برای Plugin DSL
 plugins {
-    id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
-    id "com.android.application" version "8.2.1" apply false
-    id "org.jetbrains.kotlin.android" version "1.9.20" apply false
+    id "com.android.application" version "8.6.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.9.0" apply false
+    id "io.flutter.gradle" version "0.13.0" apply false
 }
 
+rootProject.name = "phonebook_sreach"
 include ":app"
-
-// *** بخش حیاتی که قبلاً حذف شده بود ***
-// این کد پلاگین‌های فلاتر را پیدا کرده و به پروژه اضافه می‌کند
-def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
-def properties = new Properties()
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
-}
-
-def flutterSdkPath = properties.getProperty("flutter.sdk")
-if (flutterSdkPath != null) {
-    apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
-} else {
-    println "Warning: flutter.sdk not found in local.properties. Plugins will not be loaded."
-}

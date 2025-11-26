@@ -1,17 +1,18 @@
-import groovy.util.XmlParser
-
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-       
+        // Android Gradle Plugin
         classpath "com.android.tools.build:gradle:8.6.0"
+        // Kotlin Gradle Plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+        // Flutter Gradle Plugin
         classpath "io.flutter:flutter-gradle-plugin:0.13.0"
     }
 }
+
 allprojects {
     repositories {
         google()
@@ -22,33 +23,25 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
-tasks.register("clean", Delete) {
-    delete rootProject.buildDir
-}
-
-
+// Namespace Injection (اختیاری برای پروژه‌های قدیمی)
 subprojects {
     afterEvaluate { project ->
-        if (project.hasProperty("android")) {
-            project.android {
-                if (namespace == null) {
-                    def manifestFile = file('src/main/AndroidManifest.xml')
-                    if (manifestFile.exists()) {
-                        def parser = new XmlParser()
-                        def rootNode = parser.parse(manifestFile)
-                        def packageName = rootNode.attribute("package")
-                        if (packageName != null) {
-                            println "Injecting namespace '$packageName' into project '${project.name}'"
-                            namespace = packageName
-                        }
-                    }
+        if (project.hasProperty("android") && project.android.namespace == null) {
+            def manifest = file("${project.projectDir}/src/main/AndroidManifest.xml")
+            if (manifest.exists()) {
+                def parser = new XmlParser().parse(manifest)
+                def pkg = parser.attribute("package")
+                if (pkg) {
+                    project.android.namespace = pkg
                 }
             }
         }
     }
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
 }
