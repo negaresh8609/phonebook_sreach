@@ -1,6 +1,6 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()   // ← بارگذاری از Gradle Plugin Portal
+        gradlePluginPortal()
         google()
         mavenCentral()
     }
@@ -12,6 +12,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    // فقط مخازن تعریف‌شده در اینجا مجازند
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
