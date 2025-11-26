@@ -1,7 +1,7 @@
 plugins {
     id "com.android.application"
-    id "dev.flutter.flutter-gradle-plugin"
-    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.android"  
+    id "io.flutter.gradle"
 }
 
 def localProperties = new Properties()
@@ -12,15 +12,8 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
 android {
     namespace "com.example.phonebook_sreach"
@@ -31,7 +24,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
     kotlinOptions {
         jvmTarget = '17'
     }
@@ -49,13 +41,7 @@ android {
             def keystoreProperties = new Properties()
             def keystorePropertiesFile = rootProject.file('key.properties')
             if (keystorePropertiesFile.exists()) {
-                try {
-                    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-                } catch (Exception e) {
-                    println("Could not load key.properties")
-                }
-                
-                // *** اصلاح مهم: بررسی وجود مسیر قبل از استفاده ***
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
                 def keyPath = keystoreProperties['storeFile']
                 if (keyPath) {
                     storeFile file(keyPath)
@@ -63,7 +49,7 @@ android {
                     keyAlias keystoreProperties['keyAlias']
                     keyPassword keystoreProperties['keyPassword']
                 } else {
-                    println("Warning: 'storeFile' path is missing in key.properties. Build will proceed without signing configuration.")
+                    println("Warning: 'storeFile' path is missing in key.properties.")
                 }
             }
         }
@@ -86,4 +72,5 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.annotation:annotation:1.8.0'
     implementation 'androidx.core:core-ktx:1.10.1'
+   
 }
