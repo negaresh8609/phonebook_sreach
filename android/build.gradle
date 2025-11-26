@@ -1,6 +1,6 @@
     // Path: android/build.gradle
     plugins {
-        // این بلاک به Gradle می‌گوید که از کجا پلاگین‌های زیر را پیدا کند (از settings.gradle)
+  
         id 'com.android.application' version '8.4.1' apply false
         id 'org.jetbrains.kotlin.android' version '1.9.23' apply false
     }

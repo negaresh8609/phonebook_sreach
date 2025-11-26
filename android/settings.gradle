@@ -1,27 +1,29 @@
-    // Path: android/settings.gradle
-    pluginManagement {
-        repositories {
-            google()
-            mavenCentral()
-            gradlePluginPortal()
-            // مخزن فلاتر برای پلاگین‌ها
-            maven {
-                url 'https://storage.googleapis.com/download.flutter.io'
-            }
+// Path: android/settings.gradle
+// این فایل مسئولیت معرفی تمام مخازن به کل پروژه را بر عهده دارد
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+   
+        maven {
+            url 'https://storage.googleapis.com/download.flutter.io'
         }
     }
+}
 
-    dependencyResolutionManagement {
-        repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-        repositories {
-            google()
-            mavenCentral()
-            // مخزن فلاتر برای کتابخانه‌ها
-            maven {
-                url 'https://storage.googleapis.com/download.flutter.io'
-            }
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        
+        maven {
+            url 'https://storage.googleapis.com/download.flutter.io'
         }
     }
+}
 
-    rootProject.name = "android"
-    include ':app'
+rootProject.name = "android"
+include ':app'

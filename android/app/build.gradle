@@ -35,7 +35,7 @@
 
     android {
         namespace = "com.example.phonebook_sreach"
-        // --- این دو خط را به‌روز کنید ---
+       
         compileSdk = 34
         ndkVersion = flutter.ndkVersion
 
@@ -46,7 +46,7 @@
 
         defaultConfig {
             applicationId "com.example.phonebook_sreach"
-            // --- این خط را به‌روز کنید ---
+          
             minSdk = 21 // یا هر نسخه دلخواه دیگر
             targetSdk = 34
             versionCode = flutterVersionCode.toInteger()
@@ -78,5 +78,4 @@
     }
 
     dependencies {
-        // وابستگی‌ها در اینجا قرار می‌گیرند
     }
