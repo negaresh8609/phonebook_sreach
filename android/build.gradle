@@ -8,8 +8,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:8.6.0"
         // Kotlin Gradle Plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
-        // Flutter Gradle Plugin
-        // classpath "io.flutter:flutter-gradle-plugin:0.13.0"
+        // دیگر classpath ها (نیاز به flutter-gradle-plugin اینجا نیست)
     }
 }
 
@@ -24,22 +23,6 @@ rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(':app')
-}
-
-// Namespace Injection (اختیاری برای پروژه‌های قدیمی)
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty("android") && project.android.namespace == null) {
-            def manifest = file("${project.projectDir}/src/main/AndroidManifest.xml")
-            if (manifest.exists()) {
-                def parser = new XmlParser().parse(manifest)
-                def pkg = parser.attribute("package")
-                if (pkg) {
-                    project.android.namespace = pkg
-                }
-            }
-        }
-    }
 }
 
 tasks.register("clean", Delete) {

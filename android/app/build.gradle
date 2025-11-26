@@ -1,19 +1,17 @@
 plugins {
     id "com.android.application"
-    id "org.jetbrains.kotlin.android"  
-    id "io.flutter.gradle"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
 
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+def localProps = new Properties()
+def localFile = rootProject.file("local.properties")
+if (localFile.exists()) {
+    localFile.withReader("UTF-8") { r -> localProps.load(r) }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
-def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
+def versionCode = localProps.getProperty("flutter.versionCode")?.toInteger() ?: 1
+def versionName = localProps.getProperty("flutter.versionName") ?: "1.0"
 
 android {
     namespace "com.example.phonebook_sreach"
@@ -24,33 +22,26 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+    kotlinOptions { jvmTarget = "17" }
 
     defaultConfig {
         applicationId "com.example.phonebook_sreach"
         minSdk flutter.minSdkVersion
         targetSdk flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        this.versionCode versionCode
+        this.versionName versionName
     }
 
     signingConfigs {
         release {
-            def keystoreProperties = new Properties()
-            def keystorePropertiesFile = rootProject.file('key.properties')
-            if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-                def keyPath = keystoreProperties['storeFile']
-                if (keyPath) {
-                    storeFile file(keyPath)
-                    storePassword keystoreProperties['storePassword']
-                    keyAlias keystoreProperties['keyAlias']
-                    keyPassword keystoreProperties['keyPassword']
-                } else {
-                    println("Warning: 'storeFile' path is missing in key.properties.")
-                }
+            def keyFile = rootProject.file("key.properties")
+            if (keyFile.exists()) {
+                def keyProps = new Properties()
+                keyProps.load(new FileInputStream(keyFile))
+                storeFile file(keyProps.storeFile)
+                storePassword keyProps.storePassword
+                keyAlias keyProps.keyAlias
+                keyPassword keyProps.keyPassword
             }
         }
     }
@@ -65,12 +56,11 @@ android {
 }
 
 flutter {
-    source '../..'
+    source "../.."
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.annotation:annotation:1.8.0'
-    implementation 'androidx.core:core-ktx:1.10.1'
-   
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.core:core-ktx:1.10.1"
+    // سایر وابستگی‌ها…
 }

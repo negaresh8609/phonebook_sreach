@@ -1,25 +1,22 @@
 pluginManagement {
-    // ۱. بارگذاری Flutter Gradle Plugin از داخل SDK
-    def flutterSdkPath = new Properties().withInputStream(file("local.properties").newInputStream()) { props ->
-        props.load(it)
-        return props.getProperty("flutter.sdk")
-    }
-    // این دستور باعث می‌شود تا pluginManagement از سورس لوکال Flutter استفاده کند
-    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
-
-    // ۲. مخازن لازم برای یافتن پلاگین‌ها
     repositories {
+        gradlePluginPortal()   // ← بارگذاری از Gradle Plugin Portal
         google()
         mavenCentral()
-        gradlePluginPortal()
+    }
+    plugins {
+        id "com.android.application"           version "8.6.0" apply false
+        id "org.jetbrains.kotlin.android"      version "1.9.0" apply false
+        id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
     }
 }
 
-// ۳. تعریف نسخه‌های پلاگین‌ها برای Plugin DSL
-plugins {
-    id "com.android.application" version "8.6.0" apply false
-    id "org.jetbrains.kotlin.android" version "1.9.0" apply false
-    id "io.flutter.gradle" version "0.13.0" apply false
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 
 rootProject.name = "phonebook_sreach"
