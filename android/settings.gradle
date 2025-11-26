@@ -1,24 +1,27 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
+    // Path: android/settings.gradle
+    pluginManagement {
+        repositories {
+            google()
+            mavenCentral()
+            gradlePluginPortal()
+            // مخزن فلاتر برای پلاگین‌ها
+            maven {
+                url 'https://storage.googleapis.com/download.flutter.io'
+            }
+        }
     }
-    plugins {
-        id "com.android.application"           version "8.6.0" apply false
-        id "org.jetbrains.kotlin.android"      version "1.9.0" apply false
-        id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
-    }
-}
 
-dependencyResolutionManagement {
-    // فقط مخازن تعریف‌شده در اینجا مجازند
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
+    dependencyResolutionManagement {
+        repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+        repositories {
+            google()
+            mavenCentral()
+            // مخزن فلاتر برای کتابخانه‌ها
+            maven {
+                url 'https://storage.googleapis.com/download.flutter.io'
+            }
+        }
     }
-}
 
-rootProject.name = "phonebook_sreach"
-include ":app"
+    rootProject.name = "android"
+    include ':app'
