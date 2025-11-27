@@ -1,12 +1,12 @@
 // Path: android/settings.gradle
-// این فایل مسئولیت معرفی تمام مخازن به کل پروژه را بر عهده دارد
+// محتوای مورد انتظار
 
 pluginManagement {
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
-   
+        // این بخش حیاتی است و باید وجود داشته باشد
         maven {
             url 'https://storage.googleapis.com/download.flutter.io'
         }
@@ -18,7 +18,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        
+        // این بخش هم برای وابستگی‌ها لازم است
         maven {
             url 'https://storage.googleapis.com/download.flutter.io'
         }
