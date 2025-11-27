@@ -1,13 +1,14 @@
 // Path: android/app/build.gradle
 
-plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "io.flutter.gradle"
-}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'io.flutter.gradle'
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "com.example.phonebook_sreach"
+    namespace 'com.example.phonebook_sreach'
     compileSdk 34
 
     defaultConfig {
@@ -30,7 +31,7 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            // اگر امضا نیاز دارید، اینجا تعریف کنید
+            // اگر کلید امضاء دارید:
             // signingConfig signingConfigs.release
         }
     }

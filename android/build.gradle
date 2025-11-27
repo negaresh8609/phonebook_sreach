@@ -1,9 +1,38 @@
 // Path: android/build.gradle
 
-// حذف کامل buildscript و allprojects
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+  
+        maven {
+            url "https://storage.googleapis.com/download.flutter.io"
+        }
+    }
+    dependencies {
+        // Android Gradle Plugin
+        classpath "com.android.tools.build:gradle:8.4.1"
+        // Kotlin Gradle Plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23"
+        // Flutter Gradle Plugin
+        classpath "io.flutter:flutter-gradle-plugin:1.0.0"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://storage.googleapis.com/download.flutter.io"
+        }
+    }
+}
+
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    
     project.evaluationDependsOn(':app')
 }
 

@@ -1,41 +1,4 @@
 // Path: android/settings.gradle
 
-// ۱) خواندن مسیر Flutter SDK از local.properties
-def flutterSdkPath = new Properties().withInputStream(file("../local.properties").newInputStream()) { props ->
-    props.load(it)
-    props.getProperty("flutter.sdk")
-}
-
-pluginManagement {
-   
-    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
-
-   
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-        maven { url "https://storage.googleapis.com/download.flutter.io" }
-    }
-
-   
-    plugins {
-        id "com.android.application"      version "8.4.1"  apply false
-        id "org.jetbrains.kotlin.android" version "1.9.23" apply false
-        
-        id "io.flutter.gradle"            apply false
-    }
-}
-
-dependencyResolutionManagement {
-    
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url "https://storage.googleapis.com/download.flutter.io" }
-    }
-}
-
 rootProject.name = "phonebook_sreach"
 include ":app"
