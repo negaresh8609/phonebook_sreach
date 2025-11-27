@@ -1,81 +1,47 @@
-    // Path: android/app/build.gradle
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "io.flutter.gradle"
+}
 
-    // ابتدا، این پلاگین را اصلاح کنید
-    plugins {
-        id "com.android.application"
-        id "kotlin-android"
-        id "io.flutter.gradle"
+android {
+    namespace "com.example.phonebook_sreach"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.phonebook_sreach"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
     }
 
-    def localProperties = new Properties()
-    def localPropertiesFile = rootProject.file('local.properties')
-    if (localPropertiesFile.exists()) {
-        localPropertiesFile.withReader('UTF-8') { reader ->
-            localProperties.load(reader)
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildTypes {
+        release {
+            // اگر دارید کلید امضا تعریف کنید
+            // signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
         }
     }
+}
 
-    def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-    if (flutterVersionCode == null) {
-        flutterVersionCode = '1'
-    }
+flutter {
+    source "../.."
+}
 
-    def flutterVersionName = localProperties.getProperty('flutter.versionName')
-    if (flutterVersionName == null) {
-        flutterVersionName = '1.0'
-    }
+dependencies {
+    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    // بقیهٔ dependencies...
 
-    // --- بلوک جدید برای خواندن key.properties ---
-    def keystoreProperties = new Properties()
-    def keystorePropertiesFile = rootProject.file('key.properties')
-    if (keystorePropertiesFile.exists()) {
-        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    }
-    // --- پایان بلوک جدید ---
-
-    android {
-        namespace = "com.example.phonebook_sreach"
-       
-        compileSdk = 34
-        ndkVersion = flutter.ndkVersion
-
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
-        }
-
-        defaultConfig {
-            applicationId "com.example.phonebook_sreach"
-          
-            minSdk = 21 // یا هر نسخه دلخواه دیگر
-            targetSdk = 34
-            versionCode = flutterVersionCode.toInteger()
-            versionName = flutterVersionName
-        }
-
-        // --- این بلوک کامل را اضافه یا جایگزین کنید ---
-        signingConfigs {
-            release {
-                if (keystorePropertiesFile.exists()) {
-                    storeFile file(keystoreProperties['storeFile'])
-                    storePassword keystoreProperties['storePassword']
-                    keyAlias keystoreProperties['keyAlias']
-                    keyPassword keystoreProperties['keyPassword']
-                }
-            }
-        }
-        // --- پایان بلوک ---
-
-        buildTypes {
-            release {
-                signingConfig = signingConfigs.release
-            }
-        }
-    }
-
-    flutter {
-        source = "../.."
-    }
-
-    dependencies {
-    }
+    implementation "com.google.android.material:material:1.9.0"
+}
