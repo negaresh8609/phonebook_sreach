@@ -1,4 +1,21 @@
 // Path: android/app/build.gradle
+import java.util.Properties
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+// ۲. استخراج مسیر Flutter SDK
+def flutterSdkPath = localProperties.getProperty('flutter.sdk')
+if (flutterSdkPath == null) {
+    throw new GradleException("Could not find 'flutter.sdk' in local.properties.")
+}
+
+// ۳. بارگذاری اسکریپت flutter.gradle
+apply from: "$flutterSdkPath/packages/flutter_tools/gradle/flutter.gradle"
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
