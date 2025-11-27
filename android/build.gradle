@@ -15,7 +15,7 @@ buildscript {
         // Kotlin Gradle Plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23"
         // Flutter Gradle Plugin
-        classpath "io.flutter:flutter-gradle-plugin:1.0.0"
+        classpath "io.flutter:flutter-gradle-plugin:0.13.0"
     }
 }
 
