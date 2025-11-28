@@ -10,16 +10,20 @@ if (localPropertiesFile.exists()) {
 
 // ۲. استخراج مسیر Flutter SDK
 def flutterSdkPath = localProperties.getProperty('flutter.sdk')
+
 if (flutterSdkPath == null) {
-    throw new GradleException("Could not find 'flutter.sdk' in local.properties.")
+    throw new Exception("Could not find 'flutter.sdk' in local.properties.")
 }
-
 // ۳. بارگذاری اسکریپت flutter.gradle
-apply from: "$flutterSdkPath/packages/flutter_tools/gradle/flutter.gradle"
+//apply from: "$flutterSdkPath/packages/flutter_tools/gradle/flutter.gradle"
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-
+//apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'io.flutter.gradle'
+}
 // خواندن متغیر flutterRoot از local.properties
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 // بارگذاری flutter.gradle از داخل خود SDK
@@ -49,7 +53,7 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            // اگر نیاز به امضاء دارید اینجا می‌توانید تنظیم کنید
+            
             // signingConfig signingConfigs.release
         }
     }
@@ -63,5 +67,5 @@ dependencies {
     implementation "androidx.core:core-ktx:1.10.1"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.google.android.material:material:1.9.0"
-    // سایر وابستگی‌ها...
+    
 }

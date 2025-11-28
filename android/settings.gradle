@@ -1,4 +1,15 @@
 // Path: android/settings.gradle
-
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+       
+        maven {
+            name = "FlutterEngineArtifacts"
+            url = uri("${System.getenv("FLUTTER_ROOT")}/bin/cache/artifacts/engine/gradle")
+        }
+    }
+}
 rootProject.name = "phonebook_sreach"
 include ":app"
