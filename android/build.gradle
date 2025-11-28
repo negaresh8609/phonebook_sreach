@@ -1,12 +1,14 @@
+
 plugins {
     // Android Gradle Plugin
     id 'com.android.application' version '8.4.1' apply false
-    // Kotlin Plugin
+    // Kotlin Android Plugin
     id 'org.jetbrains.kotlin.android' version '1.9.23' apply false
-    // Flutter Gradle Plugin (از طریق resolutionStrategy خواهد آمد)
+   
     id 'io.flutter.gradle' version '1.0.0' apply false
 }
 
+// مدیریت مخازن سراسری پروژه
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -15,12 +17,14 @@ dependencyResolutionManagement {
     }
 }
 
+// مسیر خروجی build
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir           = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(':app')
 }
 
+// تسک clean استاندارد
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

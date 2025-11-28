@@ -1,23 +1,25 @@
+
 pluginManagement {
+    // ۱) قرار دادن includeBuild برای پلاگین Flutter
+    includeBuild("${System.getenv("FLUTTER_ROOT")}/packages/flutter_tools/gradle")
+
+    // ۲) تعریف مخازن
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
-        // مخزن پلاگین‌های Flutter در داخل Flutter SDK
-        maven {
-            name = "FlutterEngineArtifacts"
-            url  = uri("${System.getenv("FLUTTER_ROOT")}/bin/cache/artifacts/engine/gradle")
-        }
-    }
-    resolutionStrategy {
-        eachPlugin {
-            // نگاشت Plugin ID به ماژول داخل Flutter SDK
-            if (requested.id.id == "io.flutter.gradle") {
-                useModule("io.flutter:flutter-gradle-plugin:${requested.version}")
-            }
-        }
     }
 }
+
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 
 rootProject.name = "phonebook_sreach"
 include ":app"
