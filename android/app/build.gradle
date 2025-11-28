@@ -1,44 +1,21 @@
-// Path: android/app/build.gradle
-import java.util.Properties
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
-}
+// android/app/build.gradle
 
-// ۲. استخراج مسیر Flutter SDK
-def flutterSdkPath = localProperties.getProperty('flutter.sdk')
-
-if (flutterSdkPath == null) {
-    throw new Exception("Could not find 'flutter.sdk' in local.properties.")
-}
-// ۳. بارگذاری اسکریپت flutter.gradle
-//apply from: "$flutterSdkPath/packages/flutter_tools/gradle/flutter.gradle"
-
-//apply plugin: 'com.android.application'
-//apply plugin: 'kotlin-android'
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'io.flutter.gradle'
 }
-// خواندن متغیر flutterRoot از local.properties
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-// بارگذاری flutter.gradle از داخل خود SDK
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "com.example.phonebook_sreach"
-    compileSdk 34
+    namespace   "com.example.phonebook_sreach"
+    compileSdk  34
 
     defaultConfig {
         applicationId "com.example.phonebook_sreach"
-        minSdk 21
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        minSdk         21
+        targetSdk      34
+        versionCode    1
+        versionName    "1.0"
     }
 
     compileOptions {
@@ -51,10 +28,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
-            
-            // signingConfig signingConfigs.release
+            minifyEnabled    false
+            shrinkResources  false
         }
     }
 }
@@ -67,5 +42,4 @@ dependencies {
     implementation "androidx.core:core-ktx:1.10.1"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.google.android.material:material:1.9.0"
-    
 }

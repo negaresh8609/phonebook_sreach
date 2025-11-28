@@ -1,4 +1,4 @@
-// File: android/build.gradle
+// android/build.gradle
 
 plugins {
     id 'com.android.application' version '8.4.1' apply false
@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 
 rootProject.buildDir = '../build'
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.buildDir           = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(':app')
 }
 
