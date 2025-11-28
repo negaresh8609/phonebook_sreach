@@ -1,25 +1,3 @@
-
-pluginManagement {
-    // ۱) قرار دادن includeBuild برای پلاگین Flutter
-    includeBuild("${System.getenv("FLUTTER_ROOT")}/packages/flutter_tools/gradle")
-
-    // ۲) تعریف مخازن
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-
+// فقط ماژول app
 rootProject.name = "phonebook_sreach"
 include ":app"

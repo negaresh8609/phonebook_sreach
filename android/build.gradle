@@ -1,30 +1,51 @@
 
-plugins {
-    // Android Gradle Plugin
-    id 'com.android.application' version '8.4.1' apply false
-    // Kotlin Android Plugin
-    id 'org.jetbrains.kotlin.android' version '1.9.23' apply false
+buildscript {
    
-    id 'io.flutter.gradle' version '1.0.0' apply false
-}
+    ext.kotlin_version = '1.9.23'
 
-// مدیریت مخازن سراسری پروژه
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+      
+        maven {
+            name = "FlutterEngineArtifacts"
+            url  = uri("${System.getenv("FLUTTER_ROOT")}/bin/cache/artifacts/engine/gradle")
+        }
+    }
+
+    dependencies {
+        // Android Gradle Plugin
+        classpath 'com.android.tools.build:gradle:8.4.1'
+        // Kotlin Gradle Plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // Flutter Gradle Plugin (Jar)
+       
+        // مثال: اگر مسیر …/engine/gradle/io/flutter/flutter-gradle-plugin/1.0.0/... باشد،
+        // از '1.0.0' استفاده کنید
+        classpath "io.flutter:flutter-gradle-plugin:1.0.0"
     }
 }
 
-// مسیر خروجی build
+// مخازن عمومی
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            name = "FlutterEngineArtifacts"
+            url  = uri("${System.getenv("FLUTTER_ROOT")}/bin/cache/artifacts/engine/gradle")
+        }
+    }
+}
+
+
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir           = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(':app')
 }
 
-// تسک clean استاندارد
+// تسک clean
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
