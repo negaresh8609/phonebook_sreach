@@ -1,8 +1,9 @@
-// android/build.gradle
-
 plugins {
+    // Android Gradle Plugin
     id 'com.android.application' version '8.4.1' apply false
+    // Kotlin Plugin
     id 'org.jetbrains.kotlin.android' version '1.9.23' apply false
+    // Flutter Gradle Plugin (از طریق resolutionStrategy خواهد آمد)
     id 'io.flutter.gradle' version '1.0.0' apply false
 }
 

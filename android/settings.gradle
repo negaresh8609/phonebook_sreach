@@ -1,21 +1,18 @@
-// android/settings.gradle
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
+        // مخزن پلاگین‌های Flutter در داخل Flutter SDK
         maven {
             name = "FlutterEngineArtifacts"
-            url  = uri(System.getenv("FLUTTER_ROOT") + "/bin/cache/artifacts/engine/gradle")
+            url  = uri("${System.getenv("FLUTTER_ROOT")}/bin/cache/artifacts/engine/gradle")
         }
     }
     resolutionStrategy {
         eachPlugin {
+            // نگاشت Plugin ID به ماژول داخل Flutter SDK
             if (requested.id.id == "io.flutter.gradle") {
-                // مطابق نام JAR موجود در engine/gradle/
-                // فرض بر این است که فایل JAR به‌صورت
-                // flutter-gradle-plugin-<version>.jar وجود دارد
                 useModule("io.flutter:flutter-gradle-plugin:${requested.version}")
             }
         }
